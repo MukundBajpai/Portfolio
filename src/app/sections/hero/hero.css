@@ -1,0 +1,330 @@
+app-hero {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-top: calc(var(--nav-h) + 1.5rem);
+  /* Leaves room for the fixed views pill in the bottom-left corner. */
+  padding-bottom: clamp(3.75rem, 8vh, 5.25rem);
+  overflow: clip;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 2;
+}
+
+.hero__eyebrow {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: clamp(1rem, 3vh, 2rem);
+  line-height: 1.7;
+}
+
+.hero__status {
+  flex: none;
+  align-self: center;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: hero-ping 2.2s var(--ease-out-expo) infinite;
+}
+
+@keyframes hero-ping {
+  0% {
+    box-shadow: 0 0 0 0 rgb(var(--accent-rgb) / 0.6);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 12px rgb(var(--accent-rgb) / 0);
+  }
+}
+
+.hero__sep {
+  color: var(--smoke);
+}
+
+/* ─── Name ─── */
+.hero__name {
+  margin-left: -0.035em;
+  font-size: clamp(4.6rem, min(20vw, 32svh), 22rem);
+  line-height: 0.86;
+  white-space: nowrap;
+}
+
+.hero__line {
+  display: block;
+  overflow: clip;
+  padding: 0.07em 0.06em 0.03em;
+  margin: -0.07em -0.06em -0.03em;
+}
+
+.hero__line--2 {
+  padding-left: calc(0.06em + clamp(0em, 4vw, 0.62em));
+}
+
+.hero__word--solid {
+  color: var(--ink);
+}
+
+.hero__word--solid .hero__char {
+  background: var(--title-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__stack {
+  position: relative;
+  display: inline-block;
+  transition: --r 0.9s var(--ease-out-expo);
+}
+
+.hero__stack.is-lit {
+  --r: clamp(9rem, 17vw, 18rem);
+}
+
+.hero__stack.is-auto {
+  --r: clamp(7rem, 32vw, 14rem);
+  --my: 55%;
+  animation: hero-sweep 6s ease-in-out infinite alternate;
+}
+
+@keyframes hero-sweep {
+  from {
+    --mx: 0%;
+  }
+  to {
+    --mx: 100%;
+  }
+}
+
+.hero__word--outline {
+  color: transparent;
+  -webkit-text-stroke: clamp(1px, 0.11vw, 2px) rgb(var(--ink-rgb) / 0.78);
+}
+
+.hero__word--fill,
+.hero__word--fill .hero__char {
+  background: var(--gradient);
+  background-size: var(--word-w, 100%) 100%;
+  background-position: var(--char-x, 0px) 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Once split, each letter carries its slice of one word-wide gradient (set from hero.ts). */
+.hero__word--fill.is-split {
+  background: none;
+}
+
+.hero__word--fill {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 0 26px rgb(var(--accent-rgb) / 0.6));
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(
+    circle var(--r) at var(--mx) var(--my),
+    #000 0%,
+    rgb(0 0 0 / 0.85) 30%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(circle var(--r) at var(--mx) var(--my), #000 0%, rgb(0 0 0 / 0.85) 30%, transparent 72%);
+}
+
+/* The glow filter re-rasterises every frame the spotlight moves. */
+.low-power .hero__word--fill {
+  filter: none;
+}
+
+/* ─── Copy + CTAs ─── */
+.hero__bottom {
+  display: grid;
+  gap: 1.75rem;
+  margin-top: clamp(1.25rem, 3.5vh, 2.5rem);
+}
+
+.hero__role {
+  margin-bottom: 0.9rem;
+  font-size: clamp(1.35rem, 2.3vw, 2.15rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.hero__role-word {
+  display: inline-block;
+  font-size: 1.12em;
+}
+
+.hero__lede {
+  max-width: 38rem;
+}
+
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  .hero__bottom {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 3rem;
+  }
+}
+
+/* ─── Agent trace card ─── */
+.hero__trace-wrap {
+  position: absolute;
+  z-index: 3;
+  top: calc(var(--nav-h) + 2rem);
+  right: var(--gutter);
+  width: min(22.5rem, 27vw);
+  display: none;
+}
+
+.hero__trace {
+  padding: 0.9rem 1rem 1rem;
+  border-radius: 1.1rem;
+  box-shadow:
+    var(--shadow-deep),
+    0 0 0 1px rgb(var(--accent-rgb) / 0.12),
+    0 30px 80px -30px rgb(var(--accent-rgb) / 0.4);
+}
+
+.trace__head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.6rem;
+  color: var(--mist);
+}
+
+.trace__dots {
+  display: flex;
+  gap: 4px;
+}
+
+.trace__dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--track);
+}
+
+.trace__dots i:first-child {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+.trace__tag {
+  margin-left: auto;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  font-size: 0.54rem;
+  color: var(--smoke);
+}
+
+.trace__rows {
+  display: grid;
+  gap: 0.45rem;
+  font-family: var(--ff-mono);
+  font-size: 0.66rem;
+}
+
+.trace__row {
+  display: grid;
+  grid-template-columns: 3.3rem 5.2rem 1fr;
+  gap: 0.4rem;
+  align-items: baseline;
+}
+
+.trace__t {
+  color: var(--smoke);
+}
+
+.trace__who {
+  color: var(--accent-soft-text);
+}
+
+.trace__msg {
+  min-height: 1em;
+  color: var(--ink);
+}
+
+.trace__ok {
+  grid-column: 3;
+  font-size: 0.6rem;
+  color: var(--signal);
+}
+
+/* ─── Rotating scroll badge ─── */
+.hero__badge {
+  position: absolute;
+  z-index: 3;
+  top: 52%;
+  right: var(--gutter);
+  display: none;
+  place-items: center;
+  width: 7.25rem;
+  height: 7.25rem;
+  border-radius: 50%;
+  background: rgb(var(--void-rgb) / 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.hero__badge-ring {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  animation: orbit-spin 16s linear infinite;
+}
+
+.hero__badge-ring text {
+  fill: var(--mist);
+  font-family: var(--ff-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.hero__badge-arrow {
+  grid-area: 1 / 1;
+  width: 1.3rem;
+  height: 1.3rem;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.hero__badge:hover .hero__badge-arrow {
+  transform: translateY(4px);
+}
+
+@media (min-width: 1180px) and (min-height: 760px) {
+  .hero__trace-wrap {
+    display: block;
+  }
+  .hero__badge {
+    display: grid;
+  }
+}

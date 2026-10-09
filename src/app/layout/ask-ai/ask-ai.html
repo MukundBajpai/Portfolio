@@ -1,0 +1,144 @@
+@if (enabled) {
+  <div class="ask" [class.is-open]="open()" [class.is-lifted]="lifted()">
+    <div class="ask__backdrop" aria-hidden="true" (click)="close()"></div>
+
+    <section
+      class="ask__panel"
+      role="dialog"
+      aria-labelledby="ask-title"
+      [attr.aria-hidden]="!open()"
+      [inert]="!open()"
+      data-lenis-prevent
+    >
+      <span class="ask__handle" aria-hidden="true"></span>
+
+      <header class="ask__head">
+        <app-mascot class="ask__avatar" [mood]="busy() ? 'thinking' : 'idle'" />
+        <div class="ask__who">
+          <strong id="ask-title">Mukund’s AI</strong>
+          <span class="mono"><i class="ask__live"></i>{{ busy() ? 'Thinking…' : 'Online · knows his portfolio' }}</span>
+        </div>
+        @if (messages().length) {
+          <button type="button" class="ask__icon" aria-label="Start a new chat" title="New chat" (click)="reset()">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4.5h4.5" /></svg>
+          </button>
+        }
+        <button type="button" class="ask__icon" aria-label="Close chat" (click)="close()">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        </button>
+      </header>
+
+      <div #log class="ask__log" aria-live="polite">
+        @if (!messages().length) {
+          <div class="ask__intro">
+            <div class="ask__hero-bot" aria-hidden="true">
+              <app-mascot class="ask__hero-mascot" [mood]="hovered() ? 'happy' : 'idle'" />
+            </div>
+            <p class="eyebrow"><span class="eyebrow__index">(AI)</span><span class="eyebrow__line"></span>Ask anything</p>
+            <h3 class="ask__hello display">Hi, I’m his <em>sidekick.</em></h3>
+            <p class="ask__lede">I know Mukund’s projects, stack and story. Pick a question or type your own.</p>
+            <ul class="ask__prompts">
+              @for (s of suggestions; track s; let i = $index) {
+                <li [style.--d]="i">
+                  <button type="button" class="ask__prompt" (click)="ask(s)">
+                    <span class="ask__prompt-i mono">0{{ i + 1 }}</span>
+                    <span class="ask__prompt-t">{{ s }}</span>
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5 11.5 4.5M11.5 4.5H5.8M11.5 4.5v5.7" /></svg>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+
+        @for (m of messages(); track m.id; let last = $last) {
+          @if (m.role === 'user') {
+            <p class="ask__me">{{ m.text }}</p>
+          } @else {
+            <article class="ask__reply">
+              <span class="ask__dot" aria-hidden="true"></span>
+              <div class="ask__body">
+                <p class="ask__lead" style="--d: 0">{{ m.reply.lead }}</p>
+                @if (m.reply.points?.length) {
+                  <ul class="ask__points">
+                    @for (p of m.reply.points; track $index; let i = $index) {
+                      <li [style.--d]="i + 1">{{ p }}</li>
+                    }
+                  </ul>
+                }
+                @if (m.reply.links?.length) {
+                  <div class="ask__links" [style.--d]="(m.reply.points?.length ?? 0) + 1">
+                    @for (l of m.reply.links; track l.label) {
+                      <a
+                        class="ask__link mono"
+                        [href]="href(l)"
+                        [attr.download]="l.href === 'resume' ? 'Mukund-Bajpai-Resume.pdf' : null"
+                        [attr.target]="external(l) ? '_blank' : null"
+                        rel="noopener"
+                        (click)="follow($event, l)"
+                        >{{ l.label }}<span aria-hidden="true">↗</span></a
+                      >
+                    }
+                  </div>
+                }
+                @if (last && m.reply.next?.length && !busy()) {
+                  <div class="ask__next" [style.--d]="(m.reply.points?.length ?? 0) + 2">
+                    <span class="mono">Ask next</span>
+                    @for (q of m.reply.next; track q) {
+                      <button type="button" class="ask__chip" (click)="ask(q)">{{ q }}</button>
+                    }
+                  </div>
+                }
+              </div>
+            </article>
+          }
+        }
+
+        @if (busy()) {
+          <div class="ask__thinking" aria-label="Thinking">
+            <span class="ask__dot" aria-hidden="true"></span>
+            <span class="ask__bubbles"><i></i><i></i><i></i></span>
+          </div>
+        }
+      </div>
+
+      <form class="ask__form" (submit)="submit($event)">
+        <input
+          #field
+          name="q"
+          maxlength="300"
+          autocomplete="off"
+          enterkeyhint="send"
+          placeholder="Ask about projects, stack, experience…"
+          aria-label="Your question"
+        />
+        <button type="submit" class="ask__send" aria-label="Send" [disabled]="busy()">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h10M8.5 3.5 13 8l-4.5 4.5" /></svg>
+        </button>
+      </form>
+      <p class="ask__foot mono">Answers come from his portfolio · Enter to send</p>
+    </section>
+
+    @if (hint() && !open()) {
+      <button type="button" class="ask__hint" (click)="show()">
+        <strong>Hi there!</strong> Ask me anything about Mukund.
+      </button>
+    }
+
+    <button
+      type="button"
+      class="ask__fab"
+      [attr.aria-expanded]="open()"
+      aria-label="Ask my AI"
+      title="Ask my AI"
+      (click)="toggle()"
+      (mouseenter)="hovered.set(true)"
+      (mouseleave)="hovered.set(false)"
+    >
+      <span class="ask__orb">
+        <span class="ask__ring" aria-hidden="true"></span>
+        <app-mascot class="ask__mascot" [mood]="hovered() ? 'happy' : 'idle'" />
+      </span>
+    </button>
+  </div>
+}

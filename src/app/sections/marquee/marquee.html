@@ -1,0 +1,14 @@
+<div class="marquee" aria-hidden="true">
+  @for (row of rows; track row.variant) {
+    <div class="marquee__row marquee__row--{{ row.variant }}" [class.island]="row.variant === 'dark'">
+      <div class="marquee__track">
+        @for (item of row.items; track $index) {
+          <span class="marquee__item">
+            {{ item }}
+            <svg class="marquee__star" viewBox="0 0 24 24"><path d="M12 0c.6 6.3 5.7 11.4 12 12-6.3.6-11.4 5.7-12 12-.6-6.3-5.7-11.4-12-12C6.3 11.4 11.4 6.3 12 0Z" /></svg>
+          </span>
+        }
+      </div>
+    </div>
+  }
+</div>

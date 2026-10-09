@@ -1,0 +1,21 @@
+# Netlify: connect this repo (Git) or run `netlify deploy --prod` — both free.
+# Drag-and-drop ("Netlify Drop") only uploads static files, so the admin résumé upload
+# (Netlify Functions + Blobs) needs one of the two above.
+
+[build]
+  command = "npm run build"
+  publish = "dist/mukund-portfolio/browser"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"

@@ -1,0 +1,164 @@
+<section id="stack" class="section skills" data-shape="3" data-glow="0.55">
+  <div class="shell">
+    <header class="skills__head">
+      <p class="eyebrow" appReveal="fade">
+        <span class="eyebrow__index">(04)</span><span class="eyebrow__line"></span>Stack
+      </p>
+      <h2 class="display h-section" appSplit>The stack behind <em>the agents.</em></h2>
+    </header>
+
+    <div class="bento">
+      <!-- AI / GenAI — orbit -->
+      <article class="tile tile--ai spotlight" appSpotlight>
+        <div class="tile__head">
+          <span class="tile__kicker mono">{{ ai.kicker }}</span>
+          <span class="tile__count mono">{{ ai.items.length }} skills</span>
+        </div>
+        <div class="orbit" aria-hidden="true">
+          <div class="orbit__core"><span class="display">LLM</span></div>
+          @for (ring of orbits; track $index; let r = $index) {
+            <div class="orbit__ring" [style.--ring]="r" [style.--n]="ring.length">
+              @for (item of ring; track item; let k = $index) {
+                <span class="orbit__item" [style.--k]="k">
+                  <span class="orbit__chip chip">{{ item }}</span>
+                </span>
+              }
+            </div>
+          }
+        </div>
+        <div class="tile__body">
+          <h3 class="tile__title display">{{ ai.title }}</h3>
+          <p class="tile__blurb">{{ ai.blurb }}</p>
+          <!-- Visible list on phones (orbit shows dots there); screen-reader-only on larger screens. -->
+          <ul class="tile__chips ai-list">
+            @for (item of ai.items; track item) {
+              <li class="chip">{{ item }}</li>
+            }
+          </ul>
+        </div>
+      </article>
+
+      <!-- AI platforms — floating chips -->
+      <article class="tile tile--platforms spotlight" appSpotlight>
+        <div class="tile__head">
+          <span class="tile__kicker mono">{{ platforms.kicker }}</span>
+          <span class="tile__count mono">{{ platforms.items.length }} tools</span>
+        </div>
+        <div class="tile__body">
+          <h3 class="tile__title display">{{ platforms.title }}</h3>
+          <p class="tile__blurb">{{ platforms.blurb }}</p>
+          <ul class="tile__chips">
+            @for (item of platforms.items; track item; let k = $index) {
+              <li class="chip float" [style.--k]="k">{{ item }}</li>
+            }
+          </ul>
+        </div>
+      </article>
+
+      <!-- Backend — code -->
+      <article class="tile tile--backend spotlight" appSpotlight>
+        <div class="tile__head">
+          <span class="tile__kicker mono">{{ backend.kicker }}</span>
+          <span class="tile__count mono">C# · .NET 8</span>
+        </div>
+        <div class="code island" aria-hidden="true">
+          <span class="code__line"><span class="c-attr">[Function</span>(<span class="c-str">"RouteTicket"</span>)]</span>
+          <span class="code__line"
+            ><span class="c-kw">public async</span>&ngsp;<span class="c-ty">Task</span>&lt;<span class="c-ty">IActionResult</span>&gt;
+            <span class="c-fn">Run</span>(</span
+          >
+          <span class="code__line code__line--in"
+            >[<span class="c-attr">HttpTrigger</span>(<span class="c-str">"post"</span>)] <span class="c-ty">TicketDto</span> t)</span
+          >
+          <span class="code__line code__line--in"
+            >=&gt; <span class="c-fn">Ok</span>(<span class="c-kw">await</span> _orchestrator.<span class="c-fn">RouteAsync</span>(t));</span
+          >
+        </div>
+        <div class="tile__body">
+          <h3 class="tile__title display">{{ backend.title }}</h3>
+          <ul class="tile__chips">
+            @for (item of backend.items; track item) {
+              <li class="chip">{{ item }}</li>
+            }
+          </ul>
+        </div>
+      </article>
+
+      <!-- Frontend — assembling UI -->
+      <article class="tile tile--frontend spotlight" appSpotlight>
+        <div class="tile__head">
+          <span class="tile__kicker mono">{{ frontend.kicker }}</span>
+          <span class="tile__count mono">UI / UX</span>
+        </div>
+        <div class="browser island" aria-hidden="true">
+          <div class="browser__bar"><i></i><i></i><i></i><span></span></div>
+          <div class="browser__body">
+            <span class="sk sk--nav"></span>
+            <span class="sk sk--hero"></span>
+            <span class="sk sk--a"></span>
+            <span class="sk sk--b"></span>
+            <span class="sk sk--c"></span>
+          </div>
+        </div>
+        <div class="tile__body">
+          <h3 class="tile__title display">{{ frontend.title }}</h3>
+          <ul class="tile__chips">
+            @for (item of frontend.items; track item) {
+              <li class="chip">{{ item }}</li>
+            }
+          </ul>
+        </div>
+      </article>
+
+      <!-- Languages — slot ticker -->
+      <article class="tile tile--languages spotlight" appSpotlight>
+        <div class="tile__head">
+          <span class="tile__kicker mono">{{ languages.kicker }}</span>
+          <span class="tile__count mono">{{ languages.items.length }} languages</span>
+        </div>
+        <div class="ticker display" aria-hidden="true">
+          <div class="ticker__track">
+            @for (item of languages.items; track item) {
+              <span>{{ item }}</span>
+            }
+            <span>{{ languages.items[0] }}</span>
+          </div>
+        </div>
+        <div class="tile__body">
+          <h3 class="tile__title display">{{ languages.title }}</h3>
+          <ul class="tile__chips">
+            @for (item of languages.items; track item) {
+              <li class="chip">{{ item }}</li>
+            }
+          </ul>
+        </div>
+      </article>
+
+      <!-- Cloud — tool conveyor -->
+      <article class="tile tile--cloud spotlight" appSpotlight>
+        <div class="tile__head">
+          <span class="tile__kicker mono">{{ cloud.kicker }}</span>
+          <span class="tile__count mono">Azure-first</span>
+        </div>
+        <div class="conveyor" aria-hidden="true">
+          @for (row of cloudRows; track $index; let odd = $odd) {
+            <div class="conveyor__row" [class.conveyor__row--rev]="odd">
+              @for (item of row; track $index) {
+                <span class="chip">{{ item }}</span>
+              }
+            </div>
+          }
+        </div>
+        <div class="tile__body">
+          <h3 class="tile__title display">{{ cloud.title }}</h3>
+          <p class="tile__blurb">{{ cloud.blurb }}</p>
+          <ul class="sr-only">
+            @for (item of cloud.items; track item) {
+              <li>{{ item }}</li>
+            }
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

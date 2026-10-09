@@ -1,0 +1,60 @@
+<section id="contact" class="section contact" data-shape="4" data-glow="1">
+  <div class="shell">
+    <p class="eyebrow" appReveal="fade">
+      <span class="eyebrow__index">(07)</span><span class="eyebrow__line"></span>Contact
+    </p>
+
+    <h2 class="contact__title display" appSplit="chars">Let’s build<br /><em>something intelligent.</em></h2>
+
+    <div class="contact__grid">
+      <div class="contact__left">
+        <p class="lede contact__lede" appReveal>
+          Have an agentic workflow to automate, a GenAI platform to architect or a product to ship? I’d love to hear
+          about it.
+        </p>
+
+        <div class="contact__mail" appReveal>
+          <a class="contact__email" [href]="'mailto:' + profile.email" data-cursor="Write" appMagnetic="0.12">
+            {{ profile.email }}
+          </a>
+          <button type="button" class="contact__copy mono" (click)="copy()">
+            {{ copied() ? 'Copied ✓' : 'Copy email' }}
+          </button>
+        </div>
+
+        <ul class="contact__socials">
+          @for (s of profile.socials; track s.href; let i = $index) {
+            <li appReveal [revealDelay]="i * 0.06">
+              <a class="social" [href]="s.href" target="_blank" rel="noopener">
+                <span class="social__index mono">0{{ i + 1 }}</span>
+                <span class="social__label" [attr.data-text]="s.label"><span>{{ s.label }}</span></span>
+                <svg class="social__arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5 11.5 4.5M11.5 4.5H5.8M11.5 4.5v5.7" /></svg>
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <form class="contact__form glass" appReveal (submit)="send($event)">
+        <div class="field">
+          <input id="c-name" name="name" required autocomplete="name" placeholder=" " />
+          <label for="c-name">Your name</label>
+        </div>
+        <div class="field">
+          <input id="c-email" name="email" type="email" required autocomplete="email" placeholder=" " />
+          <label for="c-email">Email</label>
+        </div>
+        <div class="field">
+          <textarea id="c-message" name="message" rows="4" required placeholder=" "></textarea>
+          <label for="c-message">What are we building?</label>
+        </div>
+        <input class="contact__trap" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button class="btn btn--primary contact__send" type="submit" appMagnetic="0.2" [disabled]="status() === 'sending'">
+          <span class="btn__label" data-text="Send message"><span>Send message</span></span>
+          <app-arrow />
+        </button>
+        <p class="contact__note mono" aria-live="polite">{{ note() }}</p>
+      </form>
+    </div>
+  </div>
+</section>

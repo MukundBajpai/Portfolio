@@ -1,0 +1,33 @@
+<a class="skip-link" href="#main">Skip to content</a>
+
+<app-preloader />
+<app-cursor />
+<app-particle-field />
+<div class="vignette" aria-hidden="true"></div>
+
+<app-navbar />
+
+<main id="main">
+  <app-hero />
+  <app-marquee />
+  <app-about />
+  <app-figure />
+  <app-work />
+  <app-skills />
+  <app-experience />
+  <app-highlights />
+  <app-contact />
+</main>
+
+<app-footer />
+<app-motion-notice />
+<app-palette-lab />
+<app-ask-ai />
+
+@defer (when resume.panelOpen()) {
+  @if (resume.panelOpen()) {
+    <app-admin-panel />
+  }
+}
+
+<div class="grain" aria-hidden="true"></div>

@@ -1,0 +1,325 @@
+<ng-template #fieldTpl let-f let-path="path">
+  <div class="studio__field" [class.is-wide]="f.wide">
+    <span class="studio__label mono">{{ f.label }}@if (f.required) {<b aria-hidden="true"> *</b>}</span>
+    @switch (f.kind) {
+      @case ('textarea') {
+        <textarea rows="4" [value]="text(path)" (input)="put(path, value($event))"></textarea>
+      }
+      @case ('lines') {
+        <textarea rows="4" [value]="lines(path)" (input)="setLines(path, value($event))"></textarea>
+      }
+      @case ('select') {
+        <select (change)="put(path, value($event))">
+          @for (o of f.options; track o.id) {
+            <option [value]="o.id" [selected]="o.id === text(path)">{{ o.label }}</option>
+          }
+        </select>
+      }
+      @case ('check') {
+        <label class="studio__check">
+          <input type="checkbox" [checked]="at(path) === true" (change)="put(path, checked($event) || undefined)" />
+          <span>Yes</span>
+        </label>
+      }
+      @case ('chips') {
+        <div class="studio__chips" (click)="chipInput.focus()">
+          @for (c of chips(path); track $index) {
+            <span class="studio__chip">
+              {{ c }}
+              <button type="button" [attr.aria-label]="'Remove ' + c" (click)="removeChip(path, $index)">×</button>
+            </span>
+          }
+          <input
+            #chipInput
+            [placeholder]="chips(path).length ? 'Add…' : 'Type and press Enter'"
+            (keydown)="chipKey($event, path)"
+            (blur)="addChips(path, chipInput)"
+          />
+        </div>
+      }
+      @case ('link') {
+        <div class="studio__pair">
+          <input placeholder="Label, e.g. View on GitHub" [value]="link(path).label" (input)="setLink(path, 'label', value($event))" />
+          <input placeholder="https://…" [value]="link(path).href" (input)="setLink(path, 'href', value($event))" />
+        </div>
+      }
+      @case ('links') {
+        @for (r of rows(path); track $index; let i = $index) {
+          <div class="studio__pair studio__pair--row">
+            <input placeholder="Label" [value]="r.label" (input)="setRow(path, i, 'label', value($event))" />
+            <input placeholder="https://…" [value]="r.href" (input)="setRow(path, i, 'href', value($event))" />
+            <button type="button" class="studio__icon" aria-label="Remove link" (click)="removeRow(path, i)">×</button>
+          </div>
+        }
+        <button type="button" class="studio__add studio__add--inline mono" (click)="addRow(path)">+ Add link</button>
+      }
+      @default {
+        <input [value]="text(path)" [placeholder]="f.placeholder ?? ''" (input)="put(path, value($event))" />
+      }
+    }
+    @if (f.hint) {
+      <span class="studio__hint">{{ f.hint }}</span>
+    }
+  </div>
+</ng-template>
+
+<div class="admin" [class.is-studio]="unlocked()" role="dialog" aria-modal="true" aria-labelledby="admin-title" data-lenis-prevent>
+  <div class="admin__backdrop" (click)="close()"></div>
+
+  <section class="admin__card glass">
+    <header class="admin__head mono">
+      <span class="admin__eyebrow"><i class="admin__dot" [class.is-on]="unlocked()"></i>{{ unlocked() ? 'Owner studio' : 'Admin' }}</span>
+      <span class="admin__head-actions">
+        @if (unlocked()) {
+          <button type="button" class="admin__ghost admin__ghost--sm mono" (click)="lock()">Lock</button>
+        }
+        <button type="button" class="admin__close" aria-label="Close admin" (click)="close()">✕</button>
+      </span>
+    </header>
+
+    @if (!unlocked()) {
+      <form class="admin__form" (submit)="login($event)">
+        <h2 id="admin-title" class="admin__title display">Owner <em>only.</em></h2>
+        <p class="admin__lede">
+          Sign in to update your résumé, projects, experience and more. It goes live for everyone, no redeploy.
+        </p>
+        <label class="admin__field">
+          <span class="mono">Password</span>
+          <input #password type="password" name="password" autocomplete="current-password" required [disabled]="busy()" />
+        </label>
+        @if (error()) {
+          <p class="admin__msg admin__msg--error" role="alert">{{ error() }}</p>
+        }
+        <button type="submit" class="btn btn--primary btn--sm admin__submit" [disabled]="busy()">
+          <span class="btn__label" [attr.data-text]="busy() ? 'Checking…' : 'Unlock'"
+            ><span>{{ busy() ? 'Checking…' : 'Unlock' }}</span></span
+          >
+          <app-arrow />
+        </button>
+      </form>
+    } @else {
+      <h2 id="admin-title" class="sr-only">Owner studio</h2>
+      <nav class="studio__tabs" role="tablist" aria-label="Studio sections">
+        @for (t of tabs; track t.id) {
+          <button
+            type="button"
+            role="tab"
+            class="studio__tab mono"
+            [class.is-on]="tab() === t.id"
+            [attr.aria-selected]="tab() === t.id"
+            (click)="go(t.id)"
+          >
+            {{ t.label }}
+            @if (dirtyTabs().has(t.id)) {
+              <i class="studio__dot" title="Unpublished changes"></i>
+            }
+          </button>
+        }
+      </nav>
+
+      <div class="studio__body">
+        @switch (tab()) {
+          @case ('resume') {
+            <div class="admin__manage">
+              <h3 class="studio__h display">Your <em>résumé.</em></h3>
+              <div class="admin__current">
+                <span class="admin__label mono">Live now</span>
+                @if (resume.current(); as live) {
+                  <strong class="admin__name">{{ live.name }}</strong>
+                  <span class="admin__meta mono">{{ size(live.size) }} · uploaded {{ date(live.uploadedAt) }}</span>
+                } @else {
+                  <strong class="admin__name">Original résumé</strong>
+                  <span class="admin__meta mono">Bundled with the site</span>
+                }
+                <a class="admin__view mono" [href]="resume.href()" target="_blank" rel="noopener">View ↗</a>
+              </div>
+
+              <label
+                class="admin__drop"
+                [class.is-over]="dragging()"
+                [class.is-busy]="busy()"
+                (dragover)="dragOver($event)"
+                (dragleave)="dragging.set(false)"
+                (drop)="drop($event)"
+              >
+                <input type="file" accept="application/pdf,.pdf" [disabled]="busy()" (change)="pick($event)" />
+                <span class="admin__drop-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0-4.5 4.5M12 4l4.5 4.5M5 20h14" /></svg>
+                </span>
+                <span>{{ busy() ? 'Uploading…' : 'Drop a new PDF, or click to choose' }}</span>
+                <span class="admin__meta mono">PDF · up to 4 MB · replaces the live file instantly</span>
+              </label>
+
+              @if (resume.current()) {
+                <div class="admin__actions">
+                  <button type="button" class="admin__ghost mono" [class.is-armed]="confirmRestore()" [disabled]="busy()" (click)="restore()">
+                    {{ confirmRestore() ? 'Click again to restore' : 'Restore original' }}
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
+          @case ('skills') {
+            <div class="studio__intro">
+              <div>
+                <h3 class="studio__h display">Your <em>stack.</em></h3>
+                <p class="studio__sub">What each tile in the Stack section lists.</p>
+              </div>
+              <button type="button" class="studio__reset mono" (click)="resetTab()">Reset to original</button>
+            </div>
+            <div class="studio__groups">
+              @for (id of skillIds; track id) {
+                <fieldset class="studio__group">
+                  <legend class="mono">{{ skillTitles[id] }}</legend>
+                  <div class="studio__fields">
+                    <ng-container
+                      *ngTemplateOutlet="fieldTpl; context: { $implicit: { key: 'items', label: 'Skills', kind: 'chips', wide: true }, path: ['skills', id, 'items'] }"
+                    />
+                    <ng-container
+                      *ngTemplateOutlet="fieldTpl; context: { $implicit: { key: 'blurb', label: 'Blurb', kind: 'text', wide: true }, path: ['skills', id, 'blurb'] }"
+                    />
+                  </div>
+                </fieldset>
+              }
+            </div>
+          }
+
+          @case ('profile') {
+            <div class="studio__intro">
+              <div>
+                <h3 class="studio__h display">Your <em>profile.</em></h3>
+                <p class="studio__sub">Title, links, hero text, about and the numbers.</p>
+              </div>
+              <button type="button" class="studio__reset mono" (click)="resetTab()">Reset to original</button>
+            </div>
+            <div class="studio__groups">
+              <fieldset class="studio__group">
+                <legend class="mono">Identity</legend>
+                <div class="studio__fields">
+                  <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: { key: 'role', label: 'Role', kind: 'text', required: true }, path: ['profile', 'role'] }" />
+                  <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: { key: 'location', label: 'Location', kind: 'text' }, path: ['profile', 'location'] }" />
+                  <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: { key: 'headline', label: 'Headline', kind: 'text', wide: true }, path: ['profile', 'headline'] }" />
+                  <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: { key: 'email', label: 'Email', kind: 'text', required: true, wide: true }, path: ['profile', 'email'] }" />
+                  <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: { key: 'socials', label: 'Social links', kind: 'links', wide: true }, path: ['profile', 'socials'] }" />
+                </div>
+              </fieldset>
+              <fieldset class="studio__group">
+                <legend class="mono">Hero</legend>
+                <div class="studio__fields">
+                  <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: { key: 'heroLede', label: 'Introduction', kind: 'textarea', required: true, wide: true }, path: ['heroLede'] }" />
+                  <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: { key: 'heroRoles', label: 'Rotating phrases (“I architect …”)', kind: 'lines', wide: true, hint: 'One per line' }, path: ['heroRoles'] }" />
+                </div>
+              </fieldset>
+              <fieldset class="studio__group">
+                <legend class="mono">About</legend>
+                <div class="studio__fields">
+                  <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: { key: 'bio', label: 'Bio', kind: 'lines', wide: true, hint: 'One paragraph per line' }, path: ['bio'] }" />
+                </div>
+              </fieldset>
+              <fieldset class="studio__group">
+                <legend class="mono">Numbers</legend>
+                <div class="studio__stats">
+                  <span class="studio__label mono">Prefix</span>
+                  <span class="studio__label mono">Value</span>
+                  <span class="studio__label mono">Suffix</span>
+                  <span class="studio__label mono">Label</span>
+                  @for (s of stats(); track $index; let i = $index) {
+                    <input [value]="s.prefix ?? ''" placeholder="~" (input)="setStat(i, 'prefix', value($event))" />
+                    <input type="number" step="0.1" [value]="s.value" (input)="setStat(i, 'value', value($event))" />
+                    <input [value]="s.suffix" placeholder="+" (input)="setStat(i, 'suffix', value($event))" />
+                    <input [value]="s.label" (input)="setStat(i, 'label', value($event))" />
+                  }
+                </div>
+              </fieldset>
+            </div>
+          }
+
+          @default {
+            @let section = listTab()!;
+            @let cfg = lists[section];
+            <div class="studio__split" [class.is-editing]="editing()">
+              <div class="studio__list">
+                <div class="studio__list-head">
+                  <h3 class="studio__h display">{{ tabLabel() }}</h3>
+                  <button type="button" class="studio__add mono" (click)="add()">+ New {{ cfg.noun }}</button>
+                </div>
+                <ol class="studio__items">
+                  @for (it of items(); track $index; let i = $index) {
+                    <li class="studio__item" [class.is-on]="selected() === i">
+                      <button type="button" class="studio__item-main" (click)="open(i)">
+                        <span class="studio__item-i mono">{{ pad(i + 1) }}</span>
+                        <span class="studio__item-t">{{ cfg.title(it) }}</span>
+                        <span class="studio__item-s">{{ cfg.sub(it) }}</span>
+                      </button>
+                      <span class="studio__item-tools">
+                        <button type="button" aria-label="Move up" [disabled]="i === 0" (click)="move(i, -1)">↑</button>
+                        <button type="button" aria-label="Move down" [disabled]="i === items().length - 1" (click)="move(i, 1)">↓</button>
+                        <button
+                          type="button"
+                          class="studio__del"
+                          [class.is-armed]="confirmDelete() === i"
+                          [attr.aria-label]="confirmDelete() === i ? 'Confirm delete' : 'Delete'"
+                          (click)="remove(i)"
+                        >
+                          {{ confirmDelete() === i ? 'Delete?' : '✕' }}
+                        </button>
+                      </span>
+                    </li>
+                  }
+                </ol>
+                <button type="button" class="studio__reset mono" (click)="resetTab()">Reset to original</button>
+              </div>
+
+              <div class="studio__editor">
+                @if (items()[selected()]) {
+                  <button type="button" class="studio__back mono" (click)="editing.set(false)">← All {{ tabLabel() }}</button>
+                  <div class="studio__fields">
+                    @for (f of cfg.fields; track f.key) {
+                      <ng-container *ngTemplateOutlet="fieldTpl; context: { $implicit: f, path: field(section, f.key) }" />
+                    }
+                  </div>
+                } @else {
+                  <p class="studio__empty">Nothing here yet. Add your first {{ cfg.noun }}.</p>
+                }
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      <footer class="studio__bar">
+        @if (issues().length) {
+          <ul class="studio__issues" role="alert">
+            @for (m of issues(); track m) {
+              <li>{{ m }}</li>
+            }
+          </ul>
+        } @else if (error()) {
+          <p class="admin__msg admin__msg--error" role="alert">{{ error() }}</p>
+        } @else if (notice()) {
+          <p class="admin__msg admin__msg--ok" role="status">{{ notice() }}</p>
+        }
+        <div class="studio__bar-row">
+          <span class="studio__status mono">
+            @if (dirty()) {
+              <i class="studio__dot"></i>Unpublished changes
+            } @else {
+              <i class="studio__live"></i>Everything is live
+            }
+          </span>
+          @if (published()) {
+            <button type="button" class="admin__ghost mono" (click)="reload()">Reload to see it</button>
+          }
+          <button type="button" class="admin__ghost mono" [disabled]="!dirty() || busy()" (click)="discard()">Discard</button>
+          <button type="button" class="btn btn--primary btn--sm studio__publish" [disabled]="!dirty() || busy()" (click)="publish()">
+            <span class="btn__label" [attr.data-text]="busy() ? 'Publishing…' : 'Publish'"
+              ><span>{{ busy() ? 'Publishing…' : 'Publish' }}</span></span
+            >
+            <app-arrow />
+          </button>
+        </div>
+      </footer>
+    }
+  </section>
+</div>

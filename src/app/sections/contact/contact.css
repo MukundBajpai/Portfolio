@@ -1,0 +1,246 @@
+:host {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.contact {
+  padding-bottom: clamp(5rem, 12vh, 8rem);
+}
+
+.contact__title {
+  margin-top: 1.5rem;
+  font-size: clamp(3.4rem, 10.5vw, 10.5rem);
+  line-height: 0.86;
+}
+
+.contact__title em {
+  font-size: 1.02em;
+}
+
+.contact__grid {
+  display: grid;
+  gap: clamp(3rem, 6vw, 5rem);
+  margin-top: clamp(3rem, 8vh, 5rem);
+}
+
+@media (min-width: 1024px) {
+  .contact__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    align-items: start;
+  }
+}
+
+.contact__lede {
+  max-width: 32rem;
+}
+
+.contact__mail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 2.25rem;
+}
+
+.contact__email {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(1.35rem, 3vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  word-break: break-all;
+}
+
+.contact__email::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.2rem;
+  height: 2px;
+  background: var(--gradient);
+  transform: scaleX(0.25);
+  transform-origin: left;
+  transition: transform 0.8s var(--ease-out-expo);
+}
+
+.contact__email:hover::after {
+  transform: scaleX(1);
+}
+
+.contact__copy {
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  font-size: 0.62rem;
+  color: var(--mist);
+  transition:
+    border-color 0.4s,
+    color 0.4s;
+}
+
+.contact__copy:hover {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+/* ─── Socials ─── */
+.contact__socials {
+  margin-top: 3rem;
+  border-top: 1px solid var(--line);
+}
+
+.social {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 1.15rem;
+  border-bottom: 1px solid var(--line);
+  transition: padding 0.6s var(--ease-out-expo);
+}
+
+.social:hover {
+  padding-left: 0.75rem;
+}
+
+.social__index {
+  font-size: 0.62rem;
+  color: var(--smoke);
+}
+
+.social__label {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  font-family: var(--ff-display);
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.social__label > span,
+.social__label::after {
+  display: block;
+  transition: transform 0.7s var(--ease-out-expo);
+}
+
+.social__label::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 100%;
+  color: var(--accent-text);
+}
+
+.social:hover .social__label > span,
+.social:hover .social__label::after {
+  transform: translateY(-100%);
+}
+
+.social__arrow {
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: none;
+  stroke: var(--mist);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    transform 0.7s var(--ease-out-expo),
+    stroke 0.4s;
+}
+
+.social:hover .social__arrow {
+  stroke: var(--accent);
+  transform: rotate(45deg) scale(1.15);
+}
+
+/* ─── Form ─── */
+.contact__form {
+  display: grid;
+  gap: 1.1rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border-radius: 1.75rem;
+  box-shadow:
+    var(--shadow-deep),
+    0 0 120px -50px rgb(var(--accent-rgb) / 0.45);
+}
+
+.field {
+  position: relative;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 1.55rem 1.1rem 0.65rem;
+  border-radius: 1rem;
+  border: 1px solid var(--line-strong);
+  background: rgb(var(--void-rgb) / 0.55);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+  resize: vertical;
+  transition:
+    border-color 0.4s,
+    box-shadow 0.4s;
+}
+
+.field textarea {
+  min-height: 8.5rem;
+}
+
+.field label {
+  position: absolute;
+  left: 1.1rem;
+  top: 1.1rem;
+  font-size: 0.98rem;
+  color: var(--smoke);
+  pointer-events: none;
+  transform-origin: left top;
+  transition:
+    transform 0.45s var(--ease-out-expo),
+    color 0.3s;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 4px rgb(var(--accent-rgb) / 0.14),
+    0 18px 40px -20px rgb(var(--accent-rgb) / 0.6);
+}
+
+.field input:focus + label,
+.field textarea:focus + label,
+.field input:not(:placeholder-shown) + label,
+.field textarea:not(:placeholder-shown) + label {
+  transform: translateY(-0.6rem) scale(0.72);
+  color: var(--accent-soft-text);
+}
+
+.contact__send {
+  justify-self: start;
+  margin-top: 0.5rem;
+}
+
+.contact__send:disabled {
+  opacity: 0.6;
+}
+
+.contact__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.contact__note {
+  font-size: 0.6rem;
+  color: var(--smoke);
+}

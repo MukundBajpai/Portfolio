@@ -1,0 +1,222 @@
+:host {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.highlights {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.75rem, 4vh, 3rem);
+  min-height: 100svh;
+  padding-block: clamp(5rem, 10vh, 7rem);
+  overflow: hidden;
+}
+
+.highlights__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.highlights__head .h-section {
+  margin-top: 1.25rem;
+}
+
+.highlights__counter {
+  display: flex;
+  align-items: baseline;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1;
+}
+
+.highlights__current {
+  color: var(--accent-text);
+}
+
+.highlights__total {
+  font-size: 0.45em;
+  color: var(--smoke);
+}
+
+/* ─── Film strip ─── */
+.strip {
+  padding-inline: var(--gutter);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.strip::-webkit-scrollbar {
+  display: none;
+}
+
+.strip__track {
+  position: relative;
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  padding: 38px 18px;
+  border-radius: 6px;
+  background: #111113;
+  border-block: 1px solid var(--line);
+  box-shadow:
+    var(--shadow-deep),
+    0 0 120px -40px rgb(var(--accent-rgb) / 0.35);
+  will-change: transform;
+}
+
+.strip__track::before,
+.strip__track::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 14px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='34' height='14'%3E%3Crect x='9' y='2' width='16' height='10' rx='2.5' fill='%23050505'/%3E%3C/svg%3E")
+    repeat-x;
+  background-size: 34px 14px;
+}
+
+.strip__track::before {
+  top: 12px;
+}
+
+.strip__track::after {
+  bottom: 12px;
+}
+
+.frame {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  width: clamp(16.5rem, 29vw, 25rem);
+  aspect-ratio: 4 / 4.7;
+  padding: 1.35rem;
+  border-radius: 4px;
+  scroll-snap-align: center;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgb(var(--accent-rgb) / 0.16), transparent 60%),
+    linear-gradient(180deg, #1b1b1e, #0c0c0e);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    inset 0 0 70px rgb(0 0 0 / 0.65);
+  overflow: hidden;
+  transform-origin: 50% 50%;
+}
+
+.frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px);
+  mix-blend-mode: overlay;
+}
+
+.frame::before {
+  /* light leak on hover */
+  content: '';
+  position: absolute;
+  inset: -40%;
+  pointer-events: none;
+  background: radial-gradient(35% 35% at 80% 20%, rgb(var(--accent-soft-rgb) / 0.35), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+
+.frame:hover::before {
+  opacity: 1;
+}
+
+.frame__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.6rem;
+  color: var(--smoke);
+}
+
+.frame__kicker {
+  color: var(--accent-soft);
+  text-align: right;
+}
+
+.frame__value {
+  margin-top: auto;
+  font-size: clamp(4.5rem, 8.5vw, 7.75rem);
+  line-height: 0.85;
+  background: linear-gradient(180deg, var(--ink) 20%, var(--silver));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.frame--small .frame__value {
+  font-size: clamp(2.8rem, 4.8vw, 4.4rem);
+}
+
+.frame__caption {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--mist);
+}
+
+.frame__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.frame__link {
+  position: relative;
+  z-index: 1;
+  font-size: 0.64rem;
+  color: var(--ink);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 0.15rem;
+  transition: color 0.3s;
+}
+
+.frame__link:hover {
+  color: var(--accent-soft);
+}
+
+/* ─── Footer progress ─── */
+.highlights__foot {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.62rem;
+  color: var(--smoke);
+}
+
+.highlights__bar {
+  flex: 1;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.highlights__bar span {
+  display: block;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+/* Desktop with motion: the strip is pinned and moved by GSAP, so no native scroller. */
+@media (min-width: 900px) {
+  .strip {
+    overflow: visible;
+  }
+  :host-context(.reduce-motion) .strip {
+    overflow-x: auto;
+  }
+}

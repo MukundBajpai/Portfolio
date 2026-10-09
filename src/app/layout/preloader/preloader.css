@@ -1,0 +1,100 @@
+:host {
+  display: contents;
+}
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: clamp(1.25rem, 3vw, 2.5rem) var(--gutter);
+  background: var(--void);
+  clip-path: inset(0% 0% 0% 0%);
+  overflow: hidden;
+}
+
+.preloader::before {
+  content: '';
+  position: absolute;
+  inset: auto -10% -45% -10%;
+  height: 80%;
+  background: radial-gradient(55% 60% at 30% 100%, rgb(var(--accent-rgb) / 0.2), transparent 70%);
+  pointer-events: none;
+}
+
+.preloader__row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.68rem;
+  color: var(--mist);
+}
+
+.preloader__main {
+  position: relative;
+  align-self: end;
+  padding-bottom: clamp(1.5rem, 5vh, 3rem);
+}
+
+.preloader__count {
+  display: flex;
+  align-items: flex-start;
+  font-size: clamp(7rem, 27vw, 23rem);
+  line-height: 0.8;
+}
+
+.preloader__digits {
+  display: inline-block;
+  min-width: 3ch;
+  text-align: right;
+}
+
+.preloader__pct {
+  margin: 0.08em 0 0 0.12em;
+  font-size: 0.22em;
+  color: var(--accent-text);
+}
+
+.preloader__status {
+  margin-top: 1.5rem;
+  font-size: 0.74rem;
+  color: var(--mist);
+}
+
+.preloader__caret {
+  color: var(--accent-text);
+}
+
+.preloader__cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.3em;
+  vertical-align: -0.15em;
+  background: var(--accent);
+  animation: blink 0.9s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.preloader__bar {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: var(--line);
+}
+
+.preloader__bar span {
+  display: block;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: var(--gradient);
+  box-shadow: 0 0 22px var(--accent);
+}

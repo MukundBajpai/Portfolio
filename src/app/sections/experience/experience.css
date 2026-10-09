@@ -1,0 +1,231 @@
+:host {
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.journey__grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: clamp(3rem, 8vh, 5rem);
+}
+
+/* ─── Sticky chapter year ─── */
+.journey__aside {
+  display: none;
+}
+
+.journey__sticky {
+  position: sticky;
+  top: calc(var(--nav-h) + 3rem);
+  display: grid;
+  gap: 1rem;
+}
+
+.journey__since,
+.journey__count {
+  font-size: 0.66rem;
+  color: var(--mist);
+}
+
+.journey__count {
+  color: var(--accent-text);
+}
+
+.journey__year {
+  height: 1em;
+  overflow: hidden;
+  font-size: clamp(6rem, 12vw, 11rem);
+  line-height: 1;
+}
+
+.journey__years {
+  transform: translateY(calc(var(--i) * -1em));
+  transition: transform 1s var(--ease-out-expo);
+}
+
+.journey__years span {
+  display: block;
+  height: 1em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(var(--ink-rgb) / 0.75);
+}
+
+@media (min-width: 1024px) {
+  .journey__grid {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+    gap: 4rem;
+  }
+  .journey__aside {
+    display: block;
+  }
+}
+
+/* ─── Rail + stops ─── */
+.journey__timeline {
+  position: relative;
+  padding-left: 2.25rem;
+}
+
+.journey__rail {
+  position: absolute;
+  left: 0.45rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 1px;
+  background: var(--line-strong);
+}
+
+.journey__beam {
+  position: absolute;
+  inset: 0;
+  transform-origin: top;
+  background: linear-gradient(180deg, var(--accent-soft), var(--accent) 60%, rgb(var(--accent-rgb) / 0.2));
+  box-shadow: 0 0 14px var(--accent);
+}
+
+.journey__head {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: var(--accent-soft);
+  box-shadow:
+    0 0 0 4px rgb(var(--accent-rgb) / 0.2),
+    0 0 20px var(--accent);
+}
+
+.journey__list {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.stop {
+  position: relative;
+}
+
+.stop__node {
+  position: absolute;
+  left: -2.25rem;
+  top: 1.9rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: var(--void);
+  transition:
+    background-color 0.5s,
+    border-color 0.5s,
+    box-shadow 0.5s;
+}
+
+.stop.is-active .stop__node {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 0 6px rgb(var(--accent-rgb) / 0.15), 0 0 24px var(--accent);
+}
+
+.stop__card {
+  padding: clamp(1.35rem, 2.6vw, 2.25rem);
+  border-radius: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-deep);
+  transition:
+    border-color 0.6s,
+    box-shadow 0.6s;
+}
+
+.stop.is-active .stop__card {
+  border-color: rgb(var(--accent-rgb) / 0.3);
+  box-shadow:
+    var(--shadow-deep),
+    0 40px 90px -50px rgb(var(--accent-rgb) / 0.5);
+}
+
+.stop__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.64rem;
+  color: var(--smoke);
+}
+
+.stop__period {
+  color: var(--accent-text);
+}
+
+.stop__role {
+  margin-top: 1rem;
+  font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.stop__org {
+  margin-top: 0.3rem;
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+}
+
+.stop__points {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--mist);
+}
+
+.stop__points li {
+  position: relative;
+  padding-left: 1.35rem;
+}
+
+.stop__points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 0.65rem;
+  height: 1px;
+  background: var(--accent);
+}
+
+.stop__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.stop__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.stop__badge {
+  border-color: rgb(var(--accent-rgb) / 0.45);
+  color: var(--accent-soft-text);
+}
+
+.stop__link {
+  font-size: 0.68rem;
+  color: var(--ink);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 0.15rem;
+  transition: color 0.3s;
+}
+
+.stop__link:hover {
+  color: var(--accent-soft-text);
+}

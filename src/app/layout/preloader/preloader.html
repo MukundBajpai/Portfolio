@@ -1,0 +1,24 @@
+@if (visible()) {
+  <div #root class="preloader" role="status" aria-live="polite" aria-label="Loading portfolio">
+    <div class="preloader__row mono" data-out>
+      <span>Mukund Bajpai</span>
+      <span>Portfolio — ©2026</span>
+    </div>
+
+    <div class="preloader__main">
+      <div class="preloader__count display" data-out>
+        <span #count class="preloader__digits">000</span><span class="preloader__pct">%</span>
+      </div>
+      <p class="preloader__status mono" data-out>
+        <span class="preloader__caret">›</span> <span #status>{{ firstLog }}</span><span class="preloader__cursor"></span>
+      </p>
+    </div>
+
+    <div class="preloader__row mono" data-out>
+      <span>AI Engineer · Full-Stack Developer</span>
+      <span>Noida, IN</span>
+    </div>
+
+    <div class="preloader__bar" aria-hidden="true"><span #bar></span></div>
+  </div>
+}

@@ -1,0 +1,75 @@
+<section id="top" class="hero" data-shape="0" data-glow="1" data-shift="0.48" data-lift="0.6">
+  <div class="hero__inner shell">
+    <p class="hero__eyebrow eyebrow" data-hero-fade>
+      <span class="hero__status" aria-hidden="true"></span>
+      <span>{{ profile.headline }} <span class="hero__sep">—</span> {{ profile.location }}</span>
+    </p>
+
+    <h1 class="hero__name display" [attr.aria-label]="profile.name">
+      <span class="hero__line hero__line--1" aria-hidden="true">
+        <span class="hero__word hero__word--solid">{{ profile.firstName }}</span>
+      </span>
+      <span class="hero__line hero__line--2" aria-hidden="true">
+        <span class="hero__stack">
+          <span class="hero__word hero__word--outline">{{ profile.lastName }}</span>
+          <span class="hero__word hero__word--fill">{{ profile.lastName }}</span>
+        </span>
+      </span>
+    </h1>
+
+    <div class="hero__bottom">
+      <div class="hero__copy">
+        <p class="hero__role" data-hero-fade>
+          I architect <span class="hero__role-word serif-em">{{ roles[0] }}</span>
+        </p>
+        <p class="hero__lede lede" data-hero-fade>{{ lede }}</p>
+      </div>
+      <div class="hero__ctas" data-hero-fade>
+        <a class="btn btn--primary" href="#work" appMagnetic (click)="go($event, 'work')">
+          <span class="btn__label" data-text="Explore work"><span>Explore work</span></span>
+          <app-arrow dir="down-right" />
+        </a>
+        <a class="btn btn--ghost" [href]="resume.href()" download="Mukund-Bajpai-Resume.pdf" appMagnetic>
+          <span class="btn__label" data-text="Résumé"><span>Résumé</span></span>
+          <app-arrow dir="down" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__trace-wrap">
+    <aside class="hero__trace glass" appTilt="6" aria-label="Sample agent trace from AIxITOPS">
+      <header class="trace__head mono">
+        <span class="trace__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>agent.trace</span>
+        <span class="trace__tag">sample run</span>
+      </header>
+      <ol class="trace__rows">
+        @for (row of trace; track row.t) {
+          <li class="trace__row">
+            <span class="trace__t">{{ row.t }}</span>
+            <span class="trace__who">{{ row.who }}</span>
+            <span class="trace__msg" [attr.data-text]="row.msg">{{ row.msg }}</span>
+            @if (row.ok) {
+              <span class="trace__ok">✓ {{ row.ok }}</span>
+            }
+          </li>
+        }
+      </ol>
+    </aside>
+  </div>
+
+  <a class="hero__badge" href="#about" data-cursor="Scroll" aria-label="Scroll to about" (click)="go($event, 'about')">
+    <svg class="hero__badge-ring" viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <path id="hero-badge-path" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0" />
+      </defs>
+      <text>
+        <textPath href="#hero-badge-path" textLength="286" lengthAdjust="spacing">
+          scroll to explore · scroll to explore ·
+        </textPath>
+      </text>
+    </svg>
+    <svg class="hero__badge-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3.5 8.5 8 13l4.5-4.5" /></svg>
+  </a>
+</section>

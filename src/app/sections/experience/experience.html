@@ -1,0 +1,67 @@
+<section id="journey" class="section journey" data-shape="1" data-glow="0.45">
+  <div class="shell">
+    <header>
+      <p class="eyebrow" appReveal="fade">
+        <span class="eyebrow__index">(05)</span><span class="eyebrow__line"></span>Journey
+      </p>
+      <h2 class="display h-section journey__title" appSplit>Where I’ve been <em>building.</em></h2>
+    </header>
+
+    <div class="journey__grid">
+      <aside class="journey__aside" aria-hidden="true">
+        <div class="journey__sticky">
+          <span class="mono journey__since">Chapter</span>
+          <div class="journey__year display">
+            <div class="journey__years" [style.--i]="active()">
+              @for (s of stops; track $index) {
+                <span>{{ s.start }}</span>
+              }
+            </div>
+          </div>
+          <span class="mono journey__count">{{ pad(active() + 1) }} / {{ pad(stops.length) }}</span>
+        </div>
+      </aside>
+
+      <div class="journey__timeline">
+        <div class="journey__rail" aria-hidden="true">
+          <span class="journey__beam"></span>
+          <span class="journey__head"></span>
+        </div>
+
+        <ol class="journey__list">
+          @for (s of stops; track $index; let i = $index) {
+            <li class="stop" [class.is-active]="active() === i">
+              <span class="stop__node" aria-hidden="true"></span>
+              <article class="stop__card spotlight" appSpotlight>
+                <header class="stop__meta mono">
+                  <span class="stop__period">{{ s.period }}</span>
+                  <span>{{ s.place }}</span>
+                </header>
+                <h3 class="stop__role">{{ s.role }}</h3>
+                <p class="stop__org serif-em">{{ s.org }}</p>
+                <ul class="stop__points">
+                  @for (point of s.points; track $index) {
+                    <li>{{ point }}</li>
+                  }
+                </ul>
+                <footer class="stop__foot">
+                  <ul class="stop__tags" aria-label="Focus areas">
+                    @for (tag of s.tags; track tag) {
+                      <li class="chip">{{ tag }}</li>
+                    }
+                    @for (badge of s.badges ?? []; track badge) {
+                      <li class="chip stop__badge">★ {{ badge }}</li>
+                    }
+                  </ul>
+                  @if (s.link) {
+                    <a class="stop__link mono" [href]="s.link.href" target="_blank" rel="noopener">{{ s.link.label }} ↗</a>
+                  }
+                </footer>
+              </article>
+            </li>
+          }
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>

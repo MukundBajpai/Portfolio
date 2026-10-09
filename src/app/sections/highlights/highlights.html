@@ -1,0 +1,39 @@
+<section #section id="highlights" class="highlights" data-shape="2" data-glow="0.55">
+  <div class="shell highlights__head">
+    <div>
+      <p class="eyebrow"><span class="eyebrow__index">(06)</span><span class="eyebrow__line"></span>Highlights</p>
+      <h2 class="display h-section" appSplit>The <em>reel.</em></h2>
+    </div>
+    <p class="highlights__counter display" aria-hidden="true">
+      <span class="highlights__current">{{ pad(current() + 1) }}</span><span class="highlights__total">/{{ pad(items.length) }}</span>
+    </p>
+  </div>
+
+  <div #strip class="strip" data-lenis-prevent-horizontal>
+    <div #track class="strip__track island">
+      @for (h of items; track h.value; let i = $index) {
+        <article class="frame" [class.frame--small]="h.small">
+          <header class="frame__top mono">
+            <span>FR. {{ pad(i + 1) }}</span>
+            <span class="frame__kicker">{{ h.kicker }}</span>
+          </header>
+          <p class="frame__value display">{{ h.value }}</p>
+          <p class="frame__caption">{{ h.caption }}</p>
+          @if (h.links) {
+            <div class="frame__links">
+              @for (l of h.links; track l.href) {
+                <a class="frame__link mono" [href]="l.href" target="_blank" rel="noopener">{{ l.label }} ↗</a>
+              }
+            </div>
+          }
+        </article>
+      }
+    </div>
+  </div>
+
+  <div class="shell highlights__foot mono" aria-hidden="true">
+    <span>Keep scrolling</span>
+    <span class="highlights__bar"><span #bar></span></span>
+    <span>{{ items.length }} frames</span>
+  </div>
+</section>

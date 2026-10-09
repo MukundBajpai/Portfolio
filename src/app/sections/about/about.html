@@ -1,0 +1,81 @@
+<section id="about" class="section about" data-shape="1" data-glow="0.5" data-shift="0.18">
+  <div class="shell">
+    <p class="eyebrow" appReveal="fade">
+      <span class="eyebrow__index">(01)</span><span class="eyebrow__line"></span>About
+    </p>
+
+    <p #statement class="about__statement">
+      @for (seg of manifesto; track $index) {
+        @if (seg.em) {
+          <em class="serif-em">{{ seg.text }}</em>
+        } @else {
+          <span>{{ seg.text }}</span>
+        }
+        {{ ' ' }}
+      }
+    </p>
+
+    <div class="about__grid">
+      <div class="about__copy">
+        @for (para of bio; track $index) {
+          <p class="lede about__bio" appReveal [revealDelay]="$index * 0.1">{{ para }}</p>
+        }
+
+        <dl class="about__stats">
+          @for (s of stats; track s.label) {
+            <div class="stat" appReveal [revealDelay]="$index * 0.08">
+              <dt class="stat__label mono">{{ s.label }}</dt>
+              <dd class="stat__value display">
+                @if (s.prefix) {
+                  <span class="stat__affix">{{ s.prefix }}</span>
+                }<span [appCountUp]="s.value" [decimals]="s.decimals">{{ s.value }}</span
+                ><span class="stat__affix">{{ s.suffix }}</span>
+              </dd>
+            </div>
+          }
+        </dl>
+      </div>
+
+      <div class="about__card" appReveal="scale">
+        <article class="idcard island" appTilt="12" data-cursor="Hello">
+          <span class="idcard__border" aria-hidden="true"></span>
+          <span class="idcard__foil" aria-hidden="true"></span>
+          <span class="idcard__glare" aria-hidden="true"></span>
+
+          <header class="idcard__top mono">
+            <span>Profile / 001</span>
+            <span class="idcard__live"><i></i>Building agents</span>
+          </header>
+
+          <div class="idcard__portrait">
+            <span class="idcard__orbit" aria-hidden="true"><i></i><i></i><i></i></span>
+            @if (profile.photo) {
+              <img class="idcard__photo" [src]="profile.photo" [alt]="profile.name" loading="lazy" decoding="async" />
+            } @else {
+              <span class="idcard__initials display">{{ profile.initials }}</span>
+            }
+          </div>
+
+          <div>
+            <h3 class="idcard__name">{{ profile.name }}</h3>
+            <p class="idcard__role mono">AI Engineer · Architecture Services</p>
+          </div>
+
+          <dl class="idcard__fields">
+            @for (f of fields; track f.k) {
+              <div>
+                <dt class="mono">{{ f.k }}</dt>
+                <dd>{{ f.v }}</dd>
+              </div>
+            }
+          </dl>
+
+          <footer class="idcard__foot">
+            <span class="idcard__barcode" aria-hidden="true"></span>
+            <span class="mono">MB · 2026</span>
+          </footer>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

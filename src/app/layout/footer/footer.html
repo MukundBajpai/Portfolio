@@ -1,0 +1,35 @@
+<footer class="footer">
+  <div class="shell footer__row">
+    <span class="mono footer__id">
+      © {{ year }} {{ profile.name }}
+      @if (views.enabled) {
+        <span class="footer__views" [attr.aria-label]="views.display() + ' views'">
+          <span class="footer__views-dot" aria-hidden="true"></span>{{ views.display() }} views
+        </span>
+      }
+    </span>
+    <span class="mono footer__clock"><i class="footer__dot"></i>{{ profile.location }} · {{ time() }} IST</span>
+    <div class="footer__actions">
+      <button type="button" class="footer__top mono" [attr.aria-pressed]="!reducedMotion" (click)="toggleMotion()">
+        Motion: {{ reducedMotion ? 'Off' : 'On' }}
+      </button>
+      <button type="button" class="footer__top mono" appMagnetic="0.3" (click)="toTop()">Back to top ↑</button>
+    </div>
+  </div>
+
+  <div class="footer__mark" aria-hidden="true">
+    <span #mark class="display">{{ profile.name }}</span>
+  </div>
+
+  <div class="shell footer__credit mono">
+    <p>Built with Angular · GSAP · Three.js</p>
+    @if (resume.enabled) {
+      <button type="button" class="footer__admin" aria-label="Admin" title="Admin" (click)="resume.openPanel()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="5" y="11" width="14" height="10" rx="2.5" />
+          <path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3" />
+        </svg>
+      </button>
+    }
+  </div>
+</footer>

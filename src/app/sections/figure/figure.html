@@ -1,0 +1,56 @@
+<section id="figure" class="section figure" data-shape="4" data-glow="0.45">
+  <div class="shell figure__grid">
+    <div class="figure__copy">
+      <p class="eyebrow" appReveal="fade">
+        <span class="eyebrow__index">(02)</span><span class="eyebrow__line"></span>Collectible
+      </p>
+      <h2 class="display h-section" appSplit>Collector’s <em>edition.</em></h2>
+      <p class="lede figure__lede" appReveal>{{ c.blurb }}</p>
+
+      <dl class="figure__specs" appReveal>
+        @for (spec of c.specs; track spec.k) {
+          <div>
+            <dt class="mono">{{ spec.k }}</dt>
+            <dd>{{ spec.v }}</dd>
+          </div>
+        }
+      </dl>
+
+      <div class="figure__controls" appReveal role="group" aria-label="Figure controls">
+        <button type="button" class="figure__btn" [disabled]="!ready()" (click)="front()">Front</button>
+        <button type="button" class="figure__btn" [disabled]="!ready()" (click)="back()">Back</button>
+        <button type="button" class="figure__btn figure__btn--accent" [disabled]="!ready()" (click)="unbox()">
+          {{ unboxed() ? 'Repack' : 'Unbox' }}
+        </button>
+        <button
+          type="button"
+          class="figure__btn"
+          [disabled]="!ready()"
+          [attr.aria-pressed]="spinning()"
+          (click)="toggleSpin()"
+        >
+          {{ spinning() ? 'Pause spin' : 'Auto-spin' }}
+        </button>
+      </div>
+    </div>
+
+    <div #stage class="figure__stage" data-cursor="Drag" data-lenis-prevent-touch>
+      <div class="figure__halo" aria-hidden="true"></div>
+      <div class="figure__floor" aria-hidden="true"></div>
+      <canvas
+        #canvas
+        class="figure__canvas island"
+        [class.is-ready]="ready()"
+        role="img"
+        aria-label="3D collectible action figure of Mukund Bajpai in a toy blister pack. Drag to spin it 360 degrees."
+      ></canvas>
+      @if (!ready() && !failed()) {
+        <p class="figure__loading mono">Unboxing…</p>
+      }
+      @if (failed() && profile.photo) {
+        <img class="figure__fallback" [src]="profile.photo" [alt]="profile.name" />
+      }
+      <p class="figure__hint mono" aria-hidden="true"><span class="figure__hint-icon">⟲</span> Drag to spin 360°</p>
+    </div>
+  </div>
+</section>
