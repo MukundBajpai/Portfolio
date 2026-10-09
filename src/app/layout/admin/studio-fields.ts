@@ -41,7 +41,7 @@ export const LISTS: Record<ListSection, ListConfig> = {
       { key: 'visualTitle', label: 'Schematic title', kind: 'text', placeholder: 'orchestrator.flow' },
       { key: 'link', label: 'Link (optional)', kind: 'link', wide: true },
     ],
-    blank: (): Project => ({
+    blank: (): Record<string, unknown> => ({
       id: '',
       index: '',
       title: 'New project',
@@ -69,7 +69,7 @@ export const LISTS: Record<ListSection, ListConfig> = {
       { key: 'badges', label: 'Awards (optional)', kind: 'chips', wide: true },
       { key: 'link', label: 'Link (optional)', kind: 'link', wide: true },
     ],
-    blank: (): JourneyStop => ({
+    blank: (): Record<string, unknown> => ({
       start: String(new Date().getFullYear()),
       period: '',
       role: 'New role',
@@ -90,7 +90,7 @@ export const LISTS: Record<ListSection, ListConfig> = {
       { key: 'small', label: 'Long headline (smaller text)', kind: 'check' },
       { key: 'links', label: 'Links', kind: 'links', wide: true },
     ],
-    blank: (): Highlight => ({ kicker: '', value: 'New', caption: '' }),
+    blank: (): Record<string, unknown> => ({ kicker: '', value: 'New', caption: '' }),
     title: (h) => s(h['value']) || 'Untitled',
     sub: (h) => s(h['kicker']) || s(h['caption']),
   },
